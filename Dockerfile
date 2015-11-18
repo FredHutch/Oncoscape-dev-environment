@@ -22,7 +22,7 @@ RUN apt-get -y update && apt-get -y install \
 	libxml2-dev \
 	nodejs \
 	npm \
-  python-pip
+	python-pip
 
 # Install required non-apt packages   
 RUN pip install websocket-client && npm install -g jshint
