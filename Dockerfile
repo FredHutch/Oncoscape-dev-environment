@@ -15,6 +15,7 @@ RUN apt-get -y -qq update && apt-get -y -qq install \
 	git \
 	vim \
 	emacs24-nox \
+	nano \
 	make \
 	m4 \
 	gcc \
