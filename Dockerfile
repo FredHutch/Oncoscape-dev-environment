@@ -9,11 +9,11 @@ RUN echo "deb http://cran.fhcrc.org/bin/linux/ubuntu trusty/" > /etc/apt/sources
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
 
 # Update the system and install packages
-RUN apt-get -y update && apt-get -y install \
+RUN apt-get -y -qq update && apt-get -y -qq install \
 	r-base=3.2.2* \
 	git \
 	vim \
-	emacs-nox \
+	emacs24-nox \
 	make \
 	m4 \
 	gcc \
