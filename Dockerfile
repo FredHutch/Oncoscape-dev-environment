@@ -1,8 +1,6 @@
 # Use Ubuntu 14.04 as the base container
 FROM ubuntu:14.04
 
-MAINTAINER "Robert McDermott" robert.c.mcdermott@gmail.com
-
 # ADD the CRAN Repo to the apt sources list
 RUN echo "deb http://cran.fhcrc.org/bin/linux/ubuntu trusty/" > /etc/apt/sources.list.d/cran.fhcrc.org.list
 
@@ -11,28 +9,23 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
 
 # Update the system and install packages
 RUN apt-get -y -qq update && apt-get -y -qq install \
+
 	r-base=3.2.2* \
 	r-recommended=3.2.2-1trusty0* \
 	git \
 	vim \
-	emacs24-nox \
 	nano \
 	make \
-	m4 \
 	gcc \
-	g++ \
-	libxml2 \
-	libxml2-dev \
-	nodejs \
-	npm \
-	python-pip
+	g++ 
 
-# Install required non-apt packages   
-RUN pip install websocket-client && npm install -g jshint
+# Install latest version of Node 5.x
+RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
+RUN apt-get -y install nodejs
 
-# required to get jshint working 
-RUN ln -s /usr/bin/nodejs /usr/bin/node
+# Install node-gyp required to build node add-ons
+RUN npm install -g node-gyp
 
-EXPOSE 7777 7788
+EXPOSE  80
 
 CMD ["bash"]

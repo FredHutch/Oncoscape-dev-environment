@@ -26,12 +26,12 @@ oncodev         latest      31ee6c745277    2 minutes ago    751.8 MB
 Now that we have an image registered, you are ready to start making development environment containers. To use the development environment, create and run a container from the image you built and registered. Here is an example (assuming you named your image 'oncodev'):
 
 ```bash
-docker run -ti -p 7777:7777 --name myoncodev01 --hostname myoncodev01 oncodev
+docker run -ti -p 80:80 --name myoncodev01 --hostname myoncodev01 oncodev
 ```
 Paramater Description:
   - '--name myoncodev01' flag tags this container (choose whatever name you like). 
   - '--hostname myoncodev01' sets the hostname inside the container to match the container instance name. The bash prompt inside the container will include the provided hostname to make it clear what environment you are currently in. 
-  - '-p 7777:7777' flag tells docker that you want to bind TCP port 7777 inside your container to TCP port 7777 on your Docker-Machine VM (or directly to the host on Linux). You can bind as many ports as you need by using multiple '-p' arguments. The port you bind to outside the container doesn't have to match the port inside the container. For example '-p 80:7777' will map TCP port 80 outside the container to TCP port 7777 inside the container.
+  - '-p 80:80' flag tells docker that you want to bind TCP port 80 inside your container to TCP port 80 on your Docker-Machine VM (or directly to the host on Linux). You can bind as many ports as you need by using multiple '-p' arguments. The port you bind to outside the container doesn't have to match the port inside the container. For example '-p 8080:80' will map TCP port 8080 outside the container to TCP port 80 inside the container.
 
 After you execute the above command you'll be dropped to a bash shell inside this new container. You are now root in an isolated Linux environment that has everything that you need to build and run Oncoscape. The container is empty so you'll need to clone the Oncoscape repo (git is included in the container) and install/build/configure/run as you like. You can create new branches, edit code (vim, emacs and nano are provided), commit and push to github right from inside the container. 
 
@@ -48,13 +48,13 @@ FOR /f "tokens=*" %i IN ('docker-machine.exe env --shell=cmd default') DO %i
 docker-machine.exe env --shell=powershell default | Invoke-Expression
 ```
 
-After you build and run Oncoscape in a container you'll likely want to point your browser at it. If you are running docker on Linux, you simply point your browser at either http://localhost:7777 (replacing 7777 with the TCP port bound outside the container) or http://servername:7777 if it's running on a remote server. If you are running Docker on Mac OS X or Windows you first have to determine the IP address of the Docker Machine VM. To do so you'll need to run the following command:
+After you build and run Oncoscape in a container you'll likely want to point your browser at it. If you are running docker on Linux, you simply point your browser at either http://localhost or http://servername if it's running on a remote server. If you are running Docker on Mac OS X or Windows you first have to determine the IP address of the Docker Machine VM. To do so you'll need to run the following command:
 
 ```bash
 docker-machine ip default
 ```
 
-The output of the above command will be a private IP address that you can only reach from your development workstation. After you have this IP address simply point you browser at it with the desired port; "http://192.168.99.100:7777" for example.
+The output of the above command will be a private IP address that you can only reach from your development workstation. After you have this IP address simply point you browser at it with the desired port; "http://192.168.99.100:80" for example.
 
 #### Stopping and starting your containers
 
@@ -85,7 +85,7 @@ You're not limited to a single container, you can have as many different Oncosca
 In the examples above we cloned the Oncocape repository inside of the container. If you'd rather clone it to your workstation directly and access it from inside your container you can use the Docker 'volumes' feature. For example let's say you have cloned the Oncoscape repo to /Users/myuser/Oncoscape and want to fire up a container and access this external data from inside your container. To accomplish this you'll need to use the '-v' flag when creating a new container and tell it what folder on your workstation you want to be mounted inside the container. Here is an example:
 
 ```bash
-docker run -ti -p 7777:7777 -v /Users/myuser/Oncoscape:/opt/Oncoscape --name myoncodev02 --hostname myoncodev02 oncodev
+docker run -ti -p 80:80 -v /Users/myuser/Oncoscape:/opt/Oncoscape --name myoncodev02 --hostname myoncodev02 oncodev
 ```
 
 After running the above command, you should see that the '/User/myuser/Oncoscape' folder on your development workstation is now mounted read/write to '/opt/Oncoscape' inside this new container. You can change to this directory and use git just like you do on your workstation. It's worth noting that any modifications to this directory or files it contains inside the container, is directly modifying the files outside of your container. This approach can save you a lot of time and disk space by not having to clone the repo inside each container, but if you need true isolation between each conatiner, this might not be the right approach.
